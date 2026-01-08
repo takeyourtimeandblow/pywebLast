@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{{ user.city_from }} — {{ user.surname }} {{ user.name }}</title>
+        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+    </head>
+    <body>
+        <h2>{{ user.city_from }} — {{ user.surname }} {{ user.name }}</h2>
+
+        <div id="map" style="width: 600px; height: 400px"></div>
+
+        <script>
+            ymaps.ready(init);
+
+            function init() {
+                var map = new ymaps.Map("map", {
+                    center: [55.751574, 37.573856],
+                    zoom: 10,
+                });
+
+                ymaps.geocode("{{ user.city_from }}").then(function (res) {
+                    var coords = res.geoObjects
+                        .get(0)
+                        .geometry.getCoordinates();
+                    map.setCenter(coords);
+                    map.geoObjects.add(
+                        new ymaps.Placemark(coords, {
+                            balloonContent: "{{ user.city_from }}",
+                        }),
+                    );
+                });
+            }
+        </script>
+    </body>
+</html>
